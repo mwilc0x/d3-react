@@ -78,16 +78,16 @@
     getInitialState: function() {
       return {
         data: [
-            { id: '1', x: 3, y: 30, z: 4 },
-            { id: '2', x: 6, y: 32, z: 6 },
-            { id: '3', x: 9, y: 35, z: 4 },
-            { id: '4', x: 11, y: 38, z: 9 },
-            { id: '5', x: 14, y: 41, z: 2 },
-            { id: '6', x: 16, y: 35, z: 11 },
-            { id: '7', x: 19, y: 38, z: 7 },
-            { id: '8', x: 21, y: 47, z: 9 },
-            { id: '9', x: 23, y: 41, z: 7 },
-            { id: '10', x: 25, y: 30, z: 4 },
+          { id: '1', x: 3, y: 30, z: 4 },
+          { id: '2', x: 6, y: 32, z: 6 },
+          { id: '3', x: 9, y: 35, z: 4 },
+          { id: '4', x: 11, y: 38, z: 9 },
+          { id: '5', x: 14, y: 41, z: 2 },
+          { id: '6', x: 16, y: 35, z: 11 },
+          { id: '7', x: 19, y: 38, z: 7 },
+          { id: '8', x: 21, y: 47, z: 9 },
+          { id: '9', x: 23, y: 41, z: 7 },
+          { id: '10', x: 25, y: 30, z: 4 },
         ],
         domain: {
           x: [0, 30], 
@@ -128,6 +128,10 @@
       );
 
       this.circles.init();
+    },
+
+    componentWillUnmount: function() {
+      this.circles = null;
     },
 
     render: function() {
