@@ -1,9 +1,9 @@
 d3-react
 ========
 
-simple d3 react cirlces
+simple d3 react circles + music bar chart w/ audio api
 
-![circles](./circles.png)
+![d3react](./screen.gif)
 
 # Run Locally
 
