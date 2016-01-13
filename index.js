@@ -2,21 +2,36 @@
 
 (function() {
 
+  var Media = function() {
+    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    this.audioElement = document.getElementById('audioElement');
+    this.audioSrc = this.audioCtx.createMediaElementSource(this.audioElement);
+    this.analyser = this.audioCtx.createAnalyser();
+
+    // bind our analyser to the media element source.
+    this.audioSrc.connect(this.analyser);
+    this.audioSrc.connect(this.audioCtx.destination);
+
+    // var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+    this.frequencyData = new Uint8Array(200);
+  }
+
   /* Circles d3 class */
   var Circles = function(element, props, state) {
     this.element = element;
     this.props = props;
     this.state = state;
+    this.media = new Media();
   }
 
   /* Chart init */
   Circles.prototype.init = function() {
-    var svg = d3.select(this.element).append('svg')
+    this.svg = d3.select(this.element).append('svg')
       .attr('class', 'd3')
       .attr('width', this.props.width)
       .attr('height', this.props.height);
 
-    svg.append('g')
+    this.svg.append('g')
       .attr('class', 'd3-points');
 
     this.update();
@@ -50,6 +65,7 @@
   Circles.prototype.update = function() {
     var scales = this._scales();
     this._drawPoints(scales);
+    this._drawBarChart();
   }
 
   /* Draw the data */
@@ -72,6 +88,46 @@
     point.exit().remove();
   };
 
+  Circles.prototype._drawBarChart = function() {
+    var barPadding = '1';
+
+    var _this = this;
+
+    // Create our initial D3 chart.
+    this.svg.selectAll('rect')
+       .data(this.media.frequencyData)
+       .enter()
+       .append('rect')
+       .attr('x', function (d, i) {
+          return i * ('1600' / _this.media.frequencyData.length);
+       })
+       .attr('width', '1600' / _this.media.frequencyData.length - barPadding);
+    
+    this._renderMusic();
+  }
+
+  Circles.prototype._renderMusic = function() {
+    requestAnimationFrame(this._renderMusic.bind(this));
+
+    this.media.analyser.getByteFrequencyData(
+      this.media.frequencyData
+    );
+
+    var color = d3.scale.category20();
+
+    var _this = this;
+    // Update d3 chart with new data.
+    this.svg.selectAll('rect')
+      .data(this.media.frequencyData)
+      .attr('y', function(d) {
+         return '700' - d;
+      })
+      .attr('height', function(d) {
+         return d;
+      })
+      .attr('fill', function(d,i) { return color(i); });
+  }
+
   /* Main Container */
   var App = React.createClass({
 
@@ -91,7 +147,7 @@
         ],
         domain: {
           x: [0, 30], 
-          y: [0, 100]
+          y: [0, 60]
         }
       };
     },
@@ -118,8 +174,8 @@
       this.circles = new Circles(
         element, 
         {
-          width: '100%',
-          height: '500px'
+          width: '1600px',
+          height: '900px'
         },
         {
           data: this.props.data,

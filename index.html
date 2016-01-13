@@ -4,6 +4,13 @@
     <title>d3-react</title>
   </head>
   <body>
+  <audio id="audioElement" src="3x.mp3"></audio>
+    <div>
+      <button onclick="document.getElementById('audioElement').play()">Play &#9658;</button>
+      <button onclick="document.getElementById('audioElement').pause()">Pause ||</button>
+      <button onclick="document.getElementById('audioElement').volume+=0.1">Vol +</button>
+      <button onclick="document.getElementById('audioElement').volume-=0.1">Vol -</button>
+    </div>
     <div id="root"></div>
     <script src="https://fb.me/react-0.14.6.js"></script>
     <script src="https://fb.me/react-dom-0.14.6.js"></script>
